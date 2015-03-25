@@ -1,13 +1,15 @@
+# Remember kids: plaintext passwords are bad!
+
 from urlparse import urlparse
 from HTMLParser import HTMLParser
 import requests
 
 def authenticate(url, username, password):
-    ''' queries an asset behind CMU's WebISO wall
-    it uses Shibboleth authentication (see: http://dev.e-taxonomy.eu/trac/wiki/ShibbolethProtocol)
-    note that you can use this to authenticate stuff beyond just grades! (any CMU service)
-    sample usage:
-        s = authenticate('https://enr-apps.as.cmu.edu/audit/audit')
+    ''' Queries an asset behind CMU's WebISO wall.
+    It uses Shibboleth authentication (see: http://dev.e-taxonomy.eu/trac/wiki/ShibbolethProtocol)
+    Note that you can use this to authenticate stuff beyond just grades! (any CMU service)
+    Sample usage:
+        s = authenticate('https://enr-apps.as.cmu.edu/audit/audit', 'wcrichto', '<wcrichto password>')
         print s.get('https://enr-apps.as.cmu.edu/audit/audit').content
     '''
 
