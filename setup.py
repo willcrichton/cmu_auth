@@ -11,4 +11,5 @@ setup(name='cmu_auth',
       install_requires=[
           'requests',
       ],
+      scripts=['bin/cmu_auth'],
       zip_safe=False)

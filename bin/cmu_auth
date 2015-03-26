@@ -1,0 +1,28 @@
+#!/Users/jake/.virtualenvs/cmuauth-test/bin/python2.7
+
+import cmu_auth
+import sys
+import getpass
+
+USAGE = '''
+usage: %s [-h|--help]
+       %s <url> [username password]'
+'''
+
+if not (len(sys.argv) == 2 or len(sys.argv) == 4) or \
+        sys.argv[1] == '-h' or \
+        sys.argv[1] == '--help':
+    print USAGE % (sys.argv[0], sys.argv[0])
+    sys.exit(0)
+elif len(sys.argv) == 2:
+    username = raw_input('Username: ')
+    password = getpass.getpass()
+else:
+    username = sys.argv[2]
+    password = sys.argv[3]
+
+url = sys.argv[1]
+
+s = cmu_auth.authenticate(url, username, password)
+print s.get(url).content
+
