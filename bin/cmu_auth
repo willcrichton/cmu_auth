@@ -1,4 +1,4 @@
-#!/Users/jake/.virtualenvs/cmuauth-test/bin/python2.7
+#!/usr/bin/env python
 
 import cmu_auth
 import sys

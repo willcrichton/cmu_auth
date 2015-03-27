@@ -9,7 +9,7 @@ setup(name='cmu_auth',
       license='MIT',
       packages=['cmu_auth'],
       install_requires=[
-          'requests',
+          'requests>=2.0.1',
       ],
       scripts=['bin/cmu_auth'],
       zip_safe=False)
