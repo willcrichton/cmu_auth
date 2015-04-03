@@ -1,7 +1,9 @@
+from future import standard_library
+standard_library.install_aliases()
 # Remember kids: plaintext passwords are bad!
 
-from urlparse import urlparse
-from HTMLParser import HTMLParser
+from urllib.parse import urlparse
+from html.parser import HTMLParser
 import requests
 
 def authenticate(url, username, password):
@@ -44,7 +46,7 @@ def authenticate(url, username, password):
                 self.to_post[attrs['name']] = attrs['value']
 
     parser = ShibbolethParser()
-    parser.feed(form)
+    parser.feed(form.decode())
 
     # Update headers for where we're coming from
     s.headers = {'Host':  urlparse(url).netloc,
