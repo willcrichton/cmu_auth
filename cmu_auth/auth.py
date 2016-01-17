@@ -19,13 +19,26 @@ def authenticate(url, username, password):
     s = requests.Session()
 
     # 1. Initiate sequence by querying the protected asset
-    s.get(url)
+    data = s.get(url).content
 
-    # 2. Login to CMU's WebISO "Stateless" page
-    s.headers = {'Host': 'login.cmu.edu', 'Referer': 'https://login.cmu.edu/idp/Authn/Stateless'}
-    form = s.post('https://login.cmu.edu/idp/Authn/Stateless',
+    # 2. Login to CMU's Shibboleth sign-in page
+    class LoginParser(HTMLParser):
+        url = ''
+        def handle_starttag(self, tag, alist):
+            attrs = dict(alist)
+
+            # Figure out where we need to submit to
+            if tag == 'form':
+                self.url = attrs['action']
+
+    loginparser = LoginParser()
+    loginparser.feed(data.decode())
+    targeturl = 'https://login.cmu.edu' + loginparser.url
+
+    s.headers = {'Host': 'login.cmu.edu', 'Referer': targeturl}
+    form = s.post(targeturl,
                   data={'j_username': username, 'j_password': password,
-                        'j_continue': '1', 'submit': 'Login'}).content
+                        'j_continue': '1', '_eventId_proceed': 'Login'}).content
 
     # 3. Parse resultant HTML and send corresponding POST request
     # Here, if you were in a browser, you'd get fed an HTML form
@@ -51,7 +64,7 @@ def authenticate(url, username, password):
     # Update headers for where we're coming from
     s.headers = {'Host':  urlparse(url).netloc,
                  'Origin': 'https://login.cmu.edu',
-                 'Referer': 'https://login.cmu.edu/idp/profile/SAML2/Redirect/SSO',
+                 'Referer': targeturl,
                  'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.14 Safari/537.36'}
 
     # 4. Finish authentication by sending POST request
